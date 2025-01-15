@@ -1,5 +1,6 @@
 from openai import OpenAI
 import streamlit as st
+import json
 
 def generate_stylesheet(publication_data):
     """Generate a writer's stylesheet based on the publication's content"""
@@ -30,13 +31,28 @@ def generate_stylesheet(publication_data):
 
     {content}"""
     
+    # Create messages array
+    messages = [
+        {"role": "system", "content": "You are an expert writing style analyst."},
+        {"role": "user", "content": prompt.format(content=content_samples)}
+    ]
+    
+    # Print API request details
+    print("\n=== OpenAI API Request ===")
+    print("\nMessages:")
+    print(json.dumps(messages, indent=2))
+    print("\nParameters:")
+    print(json.dumps({
+        "model": "gpt-4",
+        "temperature": 0.7,
+        "max_tokens": 2000
+    }, indent=2))
+    print("\n========================\n")
+    
     try:
         response = client.chat.completions.create(
             model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are an expert writing style analyst."},
-                {"role": "user", "content": prompt.format(content=content_samples)}
-            ],
+            messages=messages,
             temperature=0.7,
             max_tokens=2000
         )
