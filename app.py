@@ -56,15 +56,15 @@ def main():
             with st.spinner("Generating stylesheet..."):
                 stylesheet = generate_stylesheet(publication_data)
             
-            # Display the generated stylesheet
-            st.code(stylesheet, language='css')
+            # Display the generated stylesheet with markdown formatting
+            st.markdown(stylesheet)
             
             # Add download button
             st.download_button(
                 label="Download Stylesheet",
                 data=stylesheet,
-                file_name="publication_style.css",
-                mime="text/css"
+                file_name="publication_style.txt",  # Changed to .txt since it's not CSS anymore
+                mime="text/plain"
             )
             
         except Exception as e:
