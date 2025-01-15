@@ -1,10 +1,11 @@
 from openai import OpenAI
+import streamlit as st
 
 def generate_stylesheet(publication_data):
     """Generate a writer's stylesheet based on the publication's content"""
     
-    # Initialize OpenAI client
-    client = OpenAI()
+    # Initialize OpenAI client with Streamlit secret
+    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
     
     # Extract publication info and posts
     pub_info = publication_data["publication_info"]
