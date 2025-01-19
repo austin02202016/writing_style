@@ -1,12 +1,19 @@
 from openai import OpenAI
 import streamlit as st
 import json
+import anthropic
 
-def generate_stylesheet(publication_data):
+def generate_stylesheet(publication_data, ai_choice):
     """Generate a writer's stylesheet based on the publication's content"""
     
     # Initialize OpenAI client with Streamlit secret
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+    client = anthropic.Anthropic(
+    # defaults to os.environ.get("ANTHROPIC_API_KEY")
+    api_key=st.secrets["ANTHROPIC_API_KEY"]
+    )
+
     
     # Extract publication info and posts
     pub_info = publication_data["publication_info"]
@@ -38,14 +45,26 @@ def generate_stylesheet(publication_data):
     ]
     
     try:
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=messages,
-            temperature=0.7,
-            max_tokens=2000
-        )
-        
-        return response.choices[0].message.content
-        
+        if ai_choice == "gpt":
+            # Existing GPT API call
+            response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=messages,
+                temperature=0.7,
+                max_tokens=2000
+            )
+            return response.choices[0].message.content
+        elif ai_choice == "claude":
+            # Claude API call
+            response = client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=1024,
+                messages=[
+                    {"role": "user", "content": prompt.format(content=content_samples)}
+                ]
+            )
+            return response.content[0].text
     except Exception as e:
-        raise Exception(f"Error generating stylesheet: {str(e)}") 
+        raise Exception(f"Error generating stylesheet: {str(e)}")
+        
+    
