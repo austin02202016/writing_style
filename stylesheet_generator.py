@@ -9,7 +9,7 @@ def generate_stylesheet(publication_data, ai_choice):
     # Initialize OpenAI client with Streamlit secret
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-    client = anthropic.Anthropic(
+    anthropic_client = anthropic.Anthropic(
     # defaults to os.environ.get("ANTHROPIC_API_KEY")
     api_key=st.secrets["ANTHROPIC_API_KEY"]
     )
@@ -56,7 +56,7 @@ def generate_stylesheet(publication_data, ai_choice):
             return response.choices[0].message.content
         elif ai_choice == "claude":
             # Claude API call
-            response = client.messages.create(
+            response = anthropic_client.messages.create(
                 model="claude-3-5-sonnet-20241022",
                 max_tokens=1024,
                 messages=[

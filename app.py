@@ -60,7 +60,7 @@ Here is the sample content:
         height=150
     )
 
-    
+    #git remote add origin https://github.com/austin02202016/writing_style.git
     
     if publication_url:
         # Create two columns for the buttons
